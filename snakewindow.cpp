@@ -39,7 +39,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pParent
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &SnakeWindow::handleTimer);
-    timer->start(500);
+    timer->start(level);
 
     largeurCase = pixmapMur.width();
     hauteurCase = pixmapMur.height();
@@ -48,7 +48,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pParent
 }
 
 void SnakeWindow::paintEvent(QPaintEvent *)
-{
+{   
     QPainter painter(this);
     
     Position pos;
@@ -80,6 +80,19 @@ void SnakeWindow::paintEvent(QPaintEvent *)
      for (pos.y=0;pos.y<jeu.getNbCasesY();pos.y++)
         for (pos.x=0;pos.x<jeu.getNbCasesX();pos.x++)
             painter.drawPixmap(jeu.getFoodPosition().x*largeurCase, jeu.getFoodPosition().y*hauteurCase, pixmapFood);   
+
+    // Set title of window
+    setWindowTitle("Snake Hunting");
+
+    // Display score
+    QString scoreText = "Score: " + QString::number(jeu.getScore());
+    painter.drawText(QRect(10, 10, 100, 20), Qt::AlignLeft, scoreText);
+
+    // Display current level
+    Level currentLevel = getLevel(); 
+    QString levelText = "Level: " + getLevelString(currentLevel);
+    painter.drawText(QRect(width() - 110, 10, 100, 20), Qt::AlignRight, levelText);
+
 }
 
 void SnakeWindow::keyPressEvent(QKeyEvent *event)
@@ -99,4 +112,33 @@ void SnakeWindow::handleTimer()
 {
     jeu.evolue();
     update();
+}
+
+Level SnakeWindow::getLevel() const
+{
+    return level;
+}
+
+// Use string to display in the game window
+QString SnakeWindow::getLevelString(Level level) {
+    switch (level) {
+    case EASY:
+        return "Easy";
+    case AVERAGE:
+        return "Average";
+    case HARD:
+        return "Hard";
+    default:
+        return "Unknown!";
+    }
+}
+
+void SnakeWindow::setLevel(Level l)
+{
+    level = l;
+}
+
+void SnakeWindow::setLevel(int l)
+{
+    level = l;
 }
