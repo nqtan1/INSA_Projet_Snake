@@ -1,7 +1,7 @@
 #ifndef SNAKEWINDOW_HPP
 #define SNAKEWINDOW_HPP
 
-#include<QtWidgets/QtWidgets>
+#include<QtWidgets/QtWidgets> 
 #include<QtCore/QtCore> 
 
 #include "jeu.hpp"
@@ -10,15 +10,17 @@ class SnakeWindow : public QFrame
 {
   protected:
     Jeu jeu;
-    QPixmap pixmapCorps, pixmapTete, pixmapMur;
+    QPixmap pixmapCorps, pixmapTete, pixmapMur,pixmapFood;
 
   public:
     SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());
     void handleTimer();
 
+
   protected:
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
+
 };
 
 #endif

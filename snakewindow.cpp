@@ -1,6 +1,8 @@
 #include <iostream>
 #include "snakewindow.hpp"
-
+#include "jeu.hpp"
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pParent, flags)
@@ -26,11 +28,18 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pParent
         exit(-1);
     }
 
+    if (pixmapFood.load("./data/food.bmp")==false)
+    {
+        cout<<"Impossible d'ouvrir food.bmp"<<endl;
+        exit(-1);
+    }
+
+
     jeu.init();
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &SnakeWindow::handleTimer);
-    timer->start(100);
+    timer->start(500);
 
     largeurCase = pixmapMur.width();
     hauteurCase = pixmapMur.height();
@@ -67,6 +76,10 @@ void SnakeWindow::paintEvent(QPaintEvent *)
         for (itSnake=++snake.begin(); itSnake!=snake.end(); itSnake++)
             painter.drawPixmap(itSnake->x*largeurCase, itSnake->y*hauteurCase, pixmapCorps);
     }
+    // Dessine la nourriture 
+     for (pos.y=0;pos.y<jeu.getNbCasesY();pos.y++)
+        for (pos.x=0;pos.x<jeu.getNbCasesX();pos.x++)
+            painter.drawPixmap(jeu.getFoodPosition().x*largeurCase, jeu.getFoodPosition().y*hauteurCase, pixmapFood);   
 }
 
 void SnakeWindow::keyPressEvent(QKeyEvent *event)
