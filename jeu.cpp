@@ -83,7 +83,7 @@ bool Jeu::init()
     // list<Position>::iterator itSnake;
 
     const char terrain_defaut[15][21] = {
-        "...##############...",
+        "####################",
         "#........##........#",
         "#.#####..##...####.#",
         "#........##........#",
@@ -236,36 +236,70 @@ bool Jeu::isSnakePosition(const Position &newPos, const std::list<Position> &sna
 
 bool Jeu::isWallCollision() const
 {
+    bool check = false;
     switch (dirSnake)
     {
     case GAUCHE:
         if (terrain[snake.front().y * largeur + (snake.front().x - 1)] == MUR)
+        {
             cout << "GAUCHE" << endl;
-        return true;
+            check = true;
+        }
         break;
     case DROITE:
         if (terrain[snake.front().y * largeur + (snake.front().x + 1)] == MUR)
+        {
             cout << "DROITE" << endl;
-        return true;
+            check = true;
+        }
         break;
     case HAUT:
         if (terrain[(snake.front().y - 1) * largeur + (snake.front().x)] == MUR)
+        {
             cout << "HAUT" << endl;
-        return true;
+            check = true;
+        }
         break;
     case BAS:
         if (terrain[(snake.front().y + 1) * largeur + (snake.front().x)] == MUR)
+        {
             cout << "BAS" << endl;
-        return true;
+            check = true;
+        }
         break;
     default:
         cout << "NON" << endl;
-        return false;
         break;
     }
+    return check;
+}
+
+bool Jeu::isBorderCollision(const Position &pos) const
+{
+    return (pos.x < 0 || pos.x >= largeur || pos.y < 0 || pos.y >= hauteur);
 }
 
 int Jeu::getScore() const
 {
-    return 10*(snake.size() - 5); 
+    return 10 * (snake.size() - 5);
+}
+
+void Jeu::addWall()
+{
+    Position posMur;
+    do {
+        posMur.x = rand()%largeur;
+        posMur.y = rand()%hauteur;
+    } while (!posValide(posMur));
+    terrain[posMur.y*largeur+posMur.x]=MUR;
+}
+
+void Jeu::deleteWall()
+{
+    Position posMur;
+    do {
+        posMur.x = rand()%largeur;
+        posMur.y = rand()%hauteur;
+    } while (terrain[posMur.y*largeur+posMur.x]!=MUR);
+    terrain[posMur.y*largeur+posMur.x]=VIDE;
 }

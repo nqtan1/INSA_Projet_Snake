@@ -63,8 +63,11 @@ public:
   void setDirection(Direction);
 
   /*-----------------Ajouter-----------------*/
+  // Add and remove walls
+  void addWall();
+  void deleteWall();
+
   /*----Food-----*/
-  
   // Generate food position
   void generateFoodPosition();
 
@@ -73,12 +76,10 @@ public:
 
   /*-----Collision-----*/
   bool isFoodCollision() const;
-
   bool isWallCollision() const;
-
   bool isSnakePosition(const Position &, const std::list<Position> &);
-
-  // Get Score = 10 * (length of snake end - initial length)
+  bool isBorderCollision(const Position&) const;
+  // Get Score 
   int getScore() const;
 };
 #endif
